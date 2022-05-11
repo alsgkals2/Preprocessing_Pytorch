@@ -1,4 +1,4 @@
-# Pre processing Methods (Pytorch)
+# Pre-processing Methods (Pytorch)
 Useful preprocessing code on the pytorch with python
 
 I'vd made with pytorch of python for coding!

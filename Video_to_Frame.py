@@ -1,24 +1,43 @@
 
 # imageio (mor comfortable)
-import imageio #pip install imageio[ppmpeg]
+import imageio
 import cv2
 from matplotlib import pyplot as plt
+import pandas as pd
+
+import glob
+import os
+
+mv_files = []
+root = '/mnt/Face_Private-NFS/AntiSpoofing/Idiap/'
+for a,b,c in os.walk(root+'devel'):
+    for _c in c :
+        if '.mov' in _c:
+            mv_files.append(os.path.join(a, _c))
+print(len(mv_files))
+
 
 for _mp in mv_files[1:]:
-    save_path = os.path.dirname(_mp).replace('AntiSpoofing', 'mhkim')
+    save_path = os.path.dirname(_mp).replace('AntiSpoofing', 'abcd')
     os.makedirs(save_path, exist_ok=True)
     file = os.path.basename(_mp).split('.')[0]#replace('.mov', '.jpg')
     print(save_path, file)
     reader = imageio.get_reader(_mp, 'ffmpeg')
     print(reader.count_frames())
+
+    info_frame = pd.DataFrame(read_face(_mp.replace('.mov', '.face').replace('Idiap','Idiap/face-locations')), index=None)#.drop(0,axis=1)
+    max_len = len(info_frame)
+
     for i, im in enumerate(reader):
+        if max_len >= i :
+            break
+        x, y, w, h = list(info_frame.iloc[i])[1:]
         print('Mean of frame %i is %1.1f' % (i, im.mean()))
         im = cv2.cvtColor(im,cv2.COLOR_RGB2BGR)
-        # cv2.imwrite(os.path.join(save_path,file+f'_{i}.jpg'), im)
+        im = im[y:y+h, x:x+w, :]
         plt.imshow(im)
         plt.show()
-        break
-    break
+        cv2.imwrite(os.path.join(save_path,file+f'_{i}.jpg'), im)
 
 # opencv version
 import os

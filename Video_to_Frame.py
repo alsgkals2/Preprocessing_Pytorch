@@ -7,6 +7,37 @@ import pandas as pd
 
 import glob
 import os
+#imageio version
+def read_face(filename):
+  """Reads a single file containing the KeyLemon face locations.
+
+  Parameters:
+  filename -- the name of the text file containing the face locations
+
+  Returns:
+  A numpy ndarray which is a 2-D integer (integers of 16 bits) array containing
+  in every line the frame and every column, the 5 values defined by the
+  "README" file in this directory.
+  """
+
+  f = open(filename, 'rt') #opens the file for reading
+
+  # we read all lines that are not empty
+  lines = [k.strip() for k in f.readlines() if k.strip()]
+
+  # create a numpy matrix filled with zeros and with the right dimensions to
+  # hold our data. The element type is set to integers of 16 bits.
+  retval = np.zeros((len(lines), 5), dtype='int16')
+
+  # iteratively transform the data in every line and store it on the
+  # to-be-returned matrix
+  for i, line in enumerate(lines):
+    s = line.split()
+    for j in range(5):
+      retval[i,j] = int(s[j])
+
+  return retval
+
 
 mv_files = []
 root = '/mnt/Face_Private-NFS/AntiSpoofing/Idiap/'
@@ -29,7 +60,7 @@ for _mp in mv_files[1:]:
     max_len = len(info_frame)
 
     for i, im in enumerate(reader):
-        if max_len >= i :
+        if max_len <= i :
             break
         x, y, w, h = list(info_frame.iloc[i])[1:]
         print('Mean of frame %i is %1.1f' % (i, im.mean()))

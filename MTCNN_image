@@ -1,0 +1,32 @@
+import cv2
+import os
+import glob
+import pandas as pd
+import numpy as np
+import torch
+import torchvision
+from facenet_pytorch import MTCNN
+import matplotlib.pyplot as plt
+
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
+mtcnn = MTCNN(image_size=256, device=device)
+save_test_dir = 'area_syn_train_temp'
+os.makedirs(save_test_dir, exist_ok=True)
+file_list = glob.glob('what you want processing path of folder')
+for i, fn in enumerate(file_list):
+    frame = cv2.imread(fn)
+    plt.imshow(frame)
+    plt.show()
+    result = mtcnn(frame_rgb) 
+    if result == None:
+        continue
+    result = result.permute(1,2,0).numpy() 
+    plt.imshow(result)
+    plt.show()
+    # # save image
+    save_path = os.path.join(save_test_dir,fn.split('/')[-1])
+    plt.imshow(result)
+    plt.show()
+    cv2.imwrite(save_path, crop_resize_frame)
+    break
+   

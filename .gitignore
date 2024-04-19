@@ -2,3 +2,9 @@
 *.xml
 Dataset/.ipynb_checkpoints/DatasetClass-checkpoint.py
 *.iml
+*.ipch
+*.db
+*.log
+*.tlog
+*.pyc
+*.pdb
